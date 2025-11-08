@@ -1,9 +1,36 @@
 model User {
-  id        Int         @id @default(autoincrement())
-  name      String
-  idNumber  String
-  role      UserRole    @default(GUEST)
-  status    UserStatus  @default(ACTIVE)
-  createdAt DateTime    @default(now())
-  updatedAt DateTime    @updatedAt
+  id                 Int          @id @default(autoincrement())
+  name               String
+  email              String       @unique
+  password           String
+  idNumber           String?
+  role               UserRole     @default(GUEST) // Enum for user r
+  needPasswordChange Boolean      @default(true) // Indicates if
+  status             UserStatus   @default(ACTIVE) // Enum for
+  isDeleted          Boolean      @default(false)
+  createdAt          DateTime     @default(now())
+  updatedAt          DateTime     @updatedAt
+
+
+  admin              Admin?
+  superAdmin         SuperAdmin?
+  hrAdmin            HrAdmin?
+}
+
+model Admin {
+  id     Int   @id @default(autoincrement())
+  userId Int   @unique
+  user   User @relation(fields: [userId], references: [id])
+}
+
+model SuperAdmin {
+  id     Int   @id @default(autoincrement())
+  userId Int   @unique
+  user   User @relation(fields: [userId], references: [id])
+}
+
+model HrAdmin {
+  id     Int   @id @default(autoincrement())
+  userId Int   @unique
+  user   User @relation(fields: [userId], references: [id])
 }

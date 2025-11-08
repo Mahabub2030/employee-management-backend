@@ -1,5 +1,7 @@
+import { prisma } from "../../shared/prisma";
+
 const createEmployees = async () => {
-  console.log(createEmployees);
+  const employeeData = await prisma.employees.created();
 };
 
 export const createEmployeesService = {
