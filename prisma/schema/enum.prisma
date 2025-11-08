@@ -1,0 +1,20 @@
+enum EmployeeStatus {
+  ACTIVE
+  INACTIVE
+  TERMINATED
+  ON_LEAVE
+}
+enum UserRole {
+    ADMIN
+    SUPER_ADMIN
+    HR_ADMIN
+    GUEST
+}
+enum UserStatus {
+    ACTIVE
+    INACTIVE
+}
+enum Gender {
+    MALE
+    FEMALE
+}

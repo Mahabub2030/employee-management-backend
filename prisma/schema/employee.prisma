@@ -1,0 +1,20 @@
+model Employee {
+  id                     Int             @id @default(autoincrement())
+  name                   String
+  idNumber               String          @unique
+  jobTitle               String
+  educationQualification String
+  profilePhoto           String?
+  group                  String
+  joiningDate            DateTime
+  email                  String          @unique
+  phoneNumber            String          @unique
+  isDeleted              Boolean         @default(false) // Soft delete
+  gender                 String
+  nationality            String
+  status                 EmployeeStatus  @default(ACTIVE) // Enum: ACTIVE, INACTIVE, etc.
+  createdAt              DateTime        @default(now())
+  updatedAt              DateTime        @updatedAt // Auto-updates on modification
+
+  @@map("Employees") // Maps this model to the table "Employees"
+}
