@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
+import pick from "../../helpers/pick";
 import catchAsync from "../../shared/catchAsync";
 import sendResponse from "../../shared/sendResponse";
+import { userFilterableFields } from "./user.constant";
 import { UsersService } from "./user.service";
 
 const createUsers = catchAsync(async (req: Request, res: Response) => {
@@ -13,7 +15,22 @@ const createUsers = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
+const getAllUsers = catchAsync(async (req: Request, res: Response) => {
+  const filters = pick(req.query, userFilterableFields);
+  const options = pick(req.query, ["page", "limit", "sortBy", "sortOrder"]); // pagination and sorting
+
+  const result = await UsersService.getAllUsers(filters, options);
+
+  sendResponse(res, {
+    statusCode: 201,
+    success: true,
+    message: "User retrive successfully!",
+    meta: result.meta,
+    data: result.data,
+  });
+});
 
 export const UserControler = {
   createUsers,
+  getAllUsers,
 };

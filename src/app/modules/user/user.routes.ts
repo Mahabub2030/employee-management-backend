@@ -1,14 +1,18 @@
 import express from "express";
 
-import { fileUploader } from "../../helpers/fileUploader";
 import { UserControler } from "./user.controler";
 
 const router = express.Router();
 
 router.post(
   "/create-user",
-  fileUploader.uploadTocloudinary,
+  // fileUploader.uploadTocloudinary,
   UserControler.createUsers
+);
+router.get(
+  "/",
+  // fileUploader.uploadTocloudinary,
+  UserControler.getAllUsers
 );
 
 export const userRoutes = router;
