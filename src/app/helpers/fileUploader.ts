@@ -1,35 +1,51 @@
 import { v2 as cloudinary } from "cloudinary";
+import fs from "fs";
 import multer from "multer";
 import path from "path";
 import config from "../../config";
+
+// ✅ Ensure uploads folder exists
+const uploadFolder = path.join(process.cwd(), "/uploads");
+if (!fs.existsSync(uploadFolder)) {
+  fs.mkdirSync(uploadFolder, { recursive: true });
+}
+
+// ✅ Multer storage setup with file extension
 const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, path.join(process.cwd(), "/uploads"));
+  destination: (req, file, cb) => {
+    cb(null, uploadFolder);
   },
-  filename: function (req, file, cb) {
+  filename: (req, file, cb) => {
     const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-    cb(null, file.fieldname + "-" + uniqueSuffix);
+    const ext = path.extname(file.originalname); // preserve original file extension
+    cb(null, file.fieldname + "-" + uniqueSuffix + ext);
   },
 });
 
-const upload = multer({ storage: storage });
+const upload = multer({ storage });
+
+// ✅ Cloudinary upload function with proper error handling
 const uploadTocloudinary = async (file: Express.Multer.File) => {
-  // configration
   cloudinary.config({
     cloud_name: config.cloudinary.cloud_name,
     api_key: config.cloudinary.api_key,
     api_secret: config.cloudinary.api_secret,
   });
 
-  // Upload an image
-  const uploadResult = await cloudinary.uploader
-    .upload(file.path, {
+  try {
+    const uploadResult = await cloudinary.uploader.upload(file.path, {
       public_id: file.filename,
-    })
-    .catch((error) => {
-      console.log(error);
     });
 
-  return uploadResult;
+    // ✅ Optional: delete local file after upload
+    await fs.promises.unlink(file.path);
+
+    return uploadResult;
+  } catch (error) {
+    console.error("Cloudinary upload error:", error);
+    throw error; // throw error to handle it in the route/controller
+  }
 };
-export const fileUploder = { upload, uploadTocloudinary };
+
+// ✅ Fixed export typo
+export const fileUploader = { upload, uploadTocloudinary };

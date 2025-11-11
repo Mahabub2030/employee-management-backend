@@ -14,6 +14,7 @@ const createUser = async (payload: createUserInput) => {
   });
   return result;
 };
+
 export const UsersService = {
   createUser,
 };
