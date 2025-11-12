@@ -5,6 +5,7 @@ import { prisma } from "../../shared/prisma";
 import { userSearchableFields } from "./user.constant";
 import { createUserInput } from "./user.interface";
 
+// normal User Create here
 const createUser = async (payload: createUserInput) => {
   const hashPassword = await bcrypt.hash(payload.password, 10);
 
@@ -16,6 +17,30 @@ const createUser = async (payload: createUserInput) => {
     },
   });
   return result;
+};
+// admin Create here
+const createAdmin = async (payload: { password: string; admin: any }) => {
+  const { password, admin } = payload;
+
+  const hashedPassword = await bcrypt.hash(password, 10);
+  const user = await prisma.user.create({
+    data: {
+      name: admin.name,
+      email: admin.email,
+      password: hashedPassword,
+      role: admin.role || "ADMIN",
+    },
+  });
+  const adminProfile = await prisma.admin.create({
+    data: {
+      name: admin.name,
+      email: admin.email,
+      password: hashedPassword,
+      user: { connect: { id: user.id } },
+    },
+  });
+
+  return adminProfile;
 };
 
 const getAllUsers = async (params: any, options: IOptions) => {
@@ -72,4 +97,5 @@ const getAllUsers = async (params: any, options: IOptions) => {
 export const UsersService = {
   createUser,
   getAllUsers,
+  createAdmin,
 };

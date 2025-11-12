@@ -15,6 +15,17 @@ const createUsers = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
+const createAdmin = catchAsync(async (req: Request, res: Response) => {
+  const result = await UsersService.createAdmin(req.body);
+
+  sendResponse(res, {
+    statusCode: 201,
+    success: true,
+    message: "Admin created successfully!",
+    data: result,
+  });
+});
+
 const getAllUsers = catchAsync(async (req: Request, res: Response) => {
   const filters = pick(req.query, userFilterableFields);
   const options = pick(req.query, ["page", "limit", "sortBy", "sortOrder"]); // pagination and sorting
@@ -33,4 +44,5 @@ const getAllUsers = catchAsync(async (req: Request, res: Response) => {
 export const UserControler = {
   createUsers,
   getAllUsers,
+  createAdmin,
 };
