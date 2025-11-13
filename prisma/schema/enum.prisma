@@ -13,10 +13,12 @@ enum EmployeeStatus {
   TERMINATED
   ON_LEAVE
 }
+
 enum Gender {
   MALE
   FEMALE
 }
+
 enum MaritalStatus {
   SINGLE
   MARRIED

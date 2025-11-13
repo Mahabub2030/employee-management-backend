@@ -1,5 +1,6 @@
 import { UserRole } from "@prisma/client";
 import bcryptjs from "bcryptjs";
+import { v4 as uuidv4 } from "uuid";
 import { prisma } from "../shared/prisma";
 
 export const seedSuperAdmin = async () => {
@@ -21,9 +22,10 @@ export const seedSuperAdmin = async () => {
       process.env.SUPER_ADMIN_PASSWORD as string,
       Number(process.env.BCRYPT_SALT_ROUND)
     );
-
+    const userId = uuidv4();
     const superadmin = await prisma.user.create({
       data: {
+        id: userId,
         name: "Super Admin",
         email: process.env.SUPER_ADMIN_EMAIL as string,
         password: hashedPassword,

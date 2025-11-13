@@ -1,4 +1,5 @@
 import express from "express";
+import { AdminRoutes } from "../modules/admin/admin.routes";
 import { EmployeesRoutes } from "../modules/employees/employeesRouter";
 import { userRoutes } from "../modules/user/user.routes";
 
@@ -12,6 +13,10 @@ const moduleRoutes = [
   {
     path: "/employees",
     route: EmployeesRoutes,
+  },
+  {
+    path: "/admin",
+    route: AdminRoutes,
   },
 ];
 

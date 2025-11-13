@@ -1,8 +1,10 @@
-import { Prisma } from "@prisma/client";
+import { Admin, Prisma } from "@prisma/client";
 import { IOptions, paginationHelper } from "../../helpers/paginationHelper";
 import { prisma } from "../../shared/prisma";
 import { adminSearchAbleFields } from "./admin.constant";
 import { IAdminFilterRequest } from "./admin.interface";
+
+// have some issue with this admin get Data
 
 const getAllFromDB = async (params: IAdminFilterRequest, options: IOptions) => {
   const { page, limit, skip } = paginationHelper.calculatePagination(options);
@@ -51,6 +53,7 @@ const getAllFromDB = async (params: IAdminFilterRequest, options: IOptions) => {
             createdAt: "desc",
           },
   });
+  console.log(result);
 
   const total = await prisma.admin.count({
     where: whereConditons,
@@ -64,4 +67,19 @@ const getAllFromDB = async (params: IAdminFilterRequest, options: IOptions) => {
     },
     data: result,
   };
+};
+
+const getByIdFromDB = async (id: string): Promise<Admin | null> => {
+  const result = await prisma.admin.findUnique({
+    where: {
+      id,
+      isDeleted: false,
+    },
+  });
+  return result;
+};
+
+export const AdminService = {
+  getAllFromDB,
+  getByIdFromDB,
 };
