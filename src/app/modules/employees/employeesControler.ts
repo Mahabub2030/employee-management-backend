@@ -5,6 +5,8 @@ import sendResponse from "../../shared/sendResponse";
 import { EmployeesService } from "./emoployeesService";
 import { employeeFilterableFields } from "./employees.constant";
 
+import httpStatus from "http-status";
+
 const createEmployees = catchAsync(async (req: Request, res: Response) => {
   //   const employes = req.employes;
   const result = await EmployeesService.createEmployees(req.body);
@@ -23,9 +25,21 @@ const getAllEmployees = catchAsync(async (req: Request, res: Response) => {
   const result = await EmployeesService.getAllEmployees(filters, options);
 
   sendResponse(res, {
-    statusCode: 201,
+    statusCode: httpStatus.OK,
     success: true,
     message: "Employees recived successfully!",
+    data: result,
+  });
+});
+
+const getEmployeeById = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const result = await EmployeesService.getEmployeeById(id);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: " Employees retrieval successfully",
     data: result,
   });
 });
@@ -33,4 +47,5 @@ const getAllEmployees = catchAsync(async (req: Request, res: Response) => {
 export const EmployeesControlers = {
   createEmployees,
   getAllEmployees,
+  getEmployeeById,
 };

@@ -71,8 +71,18 @@ const getAllEmployees = async (filters: any, options: IOptions) => {
     data: result,
   };
 };
+const getEmployeeById = async (id: string) => {
+  const result = await prisma.employee.findUnique({
+    where: {
+      id,
+      isDeleted: false,
+    },
+  });
+  return result;
+};
 
 export const EmployeesService = {
   createEmployees,
   getAllEmployees,
+  getEmployeeById,
 };
