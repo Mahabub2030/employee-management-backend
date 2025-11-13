@@ -35,6 +35,7 @@ model Admin {
   password       String
   profilePhoto   String?
   changePassword Boolean   @default(true)
+  isDeleted      Boolean   @default(false)
   userId         Int       @unique
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
@@ -50,6 +51,7 @@ model SuperAdmin {
   profilePhoto   String?
   changePassword Boolean   @default(true)
   userId         Int       @unique
+  isDeleted      Boolean   @default(false)
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
 
@@ -64,6 +66,7 @@ model HrAdmin {
   profilePhoto   String?
   changePassword Boolean   @default(true)
   userId         Int       @unique
+  isDeleted      Boolean   @default(false)
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
 

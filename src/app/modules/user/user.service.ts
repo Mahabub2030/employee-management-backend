@@ -32,7 +32,7 @@ const createAdmin = async (payload: { password: string; admin: any }) => {
   });
   return result;
 };
-
+// caretHrAdmin Create here
 const createHrAdmin = async (payload: { password: string; hrAdmin: any }) => {
   const hashPassword = await bcrypt.hash(payload.password, 10);
   const result = await prisma.user.create({
