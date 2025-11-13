@@ -11,6 +11,7 @@ router.post(
 );
 
 router.post("/create-admin", UserControler.createAdmin);
+router.post("/create-hr-admin", UserControler.createHrAdmin);
 router.get(
   "/",
   // fileUploader.uploadTocloudinary,

@@ -20,27 +20,30 @@ const createUser = async (payload: createUserInput) => {
 };
 // admin Create here
 const createAdmin = async (payload: { password: string; admin: any }) => {
-  const { password, admin } = payload;
+  const hashPassword = await bcrypt.hash(payload.password, 10);
 
-  const hashedPassword = await bcrypt.hash(password, 10);
-  const user = await prisma.user.create({
+  const result = await prisma.user.create({
     data: {
-      name: admin.name,
-      email: admin.email,
-      password: hashedPassword,
-      role: admin.role || "ADMIN",
+      name: payload.admin.name,
+      email: payload.admin.email,
+      password: hashPassword,
+      role: "ADMIN",
     },
   });
-  const adminProfile = await prisma.admin.create({
+  return result;
+};
+
+const createHrAdmin = async (payload: { password: string; hrAdmin: any }) => {
+  const hashPassword = await bcrypt.hash(payload.password, 10);
+  const result = await prisma.user.create({
     data: {
-      name: admin.name,
-      email: admin.email,
-      password: hashedPassword,
-      user: { connect: { id: user.id } },
+      name: payload.hrAdmin.name,
+      email: payload.hrAdmin.email,
+      password: hashPassword,
+      role: "HR_ADMIN",
     },
   });
-
-  return adminProfile;
+  return result;
 };
 
 const getAllUsers = async (params: any, options: IOptions) => {
@@ -98,4 +101,5 @@ export const UsersService = {
   createUser,
   getAllUsers,
   createAdmin,
+  createHrAdmin,
 };
