@@ -94,9 +94,37 @@ const softDelete = async (id: string) => {
   });
 };
 
+const updateEmployees = async (payload: any) => {
+  const { id, email } = payload;
+
+  const employeeInfo = await prisma.employee.findFirstOrThrow({
+    where: {
+      email: payload.email,
+      isDeleted: false,
+    },
+  });
+
+  return await prisma.$transaction(async (tnx) => {
+    await tnx.employee.update({
+      where: {
+        id: employeeInfo.id,
+      },
+      data: employeeInfo,
+    });
+
+    const result = await tnx.employee.findUnique({
+      where: {
+        id: employeeInfo.id,
+      },
+    });
+    return result;
+  });
+};
+
 export const EmployeesService = {
   createEmployees,
   getAllEmployees,
   getEmployeeById,
   softDelete,
+  updateEmployees,
 };

@@ -6,6 +6,7 @@ import { EmployeesService } from "./emoployeesService";
 import { employeeFilterableFields } from "./employees.constant";
 
 import httpStatus from "http-status";
+import { IJWTPayload } from "../../types/common";
 
 const createEmployees = catchAsync(async (req: Request, res: Response) => {
   //   const employes = req.employes;
@@ -55,9 +56,24 @@ const softDelete = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const updateEmployees = catchAsync(
+  async (req: Request & { user?: IJWTPayload }, res: Response) => {
+    const user = req.user;
+    const result = await EmployeesService.updateEmployees(user as IJWTPayload);
+
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: " Employee updated successfully",
+      data: result,
+    });
+  }
+);
+
 export const EmployeesControlers = {
   createEmployees,
   getAllEmployees,
   getEmployeeById,
+  updateEmployees,
   softDelete,
 };

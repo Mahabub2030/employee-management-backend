@@ -7,6 +7,8 @@ router.post("/", EmployeesControlers.createEmployees);
 router.get("/", EmployeesControlers.getAllEmployees);
 
 router.get("/:id", EmployeesControlers.getEmployeeById);
+
+router.patch("/:id", EmployeesControlers.updateEmployees);
 router.delete("/soft/:id", EmployeesControlers.softDelete);
 
 export const EmployeesRoutes = router;
