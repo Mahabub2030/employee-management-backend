@@ -1,20 +1,25 @@
+enum UserRole {
+  SUPER_ADMIN
+  ADMIN
+  HR_ADMIN
+  ENGINEER
+  SUPERVISOR
+  GUEST
+}
+
 enum EmployeeStatus {
   ACTIVE
   INACTIVE
   TERMINATED
   ON_LEAVE
 }
-enum UserRole {
-    ADMIN
-    SUPER_ADMIN
-    HR_ADMIN
-    GUEST
-}
-enum UserStatus {
-    ACTIVE
-    INACTIVE
-}
 enum Gender {
-    MALE
-    FEMALE
+  MALE
+  FEMALE
+}
+enum MaritalStatus {
+  SINGLE
+  MARRIED
+  DIVORCED
+  WIDOWED
 }

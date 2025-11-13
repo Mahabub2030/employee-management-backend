@@ -1,20 +1,32 @@
+
 model User {
-  id                 Int          @id @default(autoincrement())
+  id                 Int             @id @default(autoincrement())
   name               String
-  email              String       @unique
+  email              String          @unique
   profilePhoto       String?
   password           String
   idNumber           String?
-  role               UserRole     @default(GUEST) // Enum for user r
-  needPasswordChange Boolean      @default(true) // Indicates if
-  status             UserStatus   @default(ACTIVE) // Enum for
-  isDeleted          Boolean      @default(false)
-  createdAt          DateTime     @default(now())
-  updatedAt          DateTime     @updatedAt
+  role               UserRole        @default(GUEST)
+  needPasswordChange Boolean         @default(true)
+  status             EmployeeStatus  @default(ACTIVE)
+  isDeleted          Boolean         @default(false)
+  createdAt          DateTime        @default(now())
+  updatedAt          DateTime        @updatedAt
+
+  //                 Relations
   admin              Admin?
   superAdmin         SuperAdmin?
   hrAdmin            HrAdmin?
+
+
+  // ✅ Add this relation
+  authProviders      AuthProvider[]
+
 }
+
+// ======================
+// Role Models
+// ======================
 
 model Admin {
   id             Int       @id @default(autoincrement())
@@ -26,6 +38,7 @@ model Admin {
   userId         Int       @unique
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
+
   user           User     @relation(fields: [userId], references: [id])
 }
 
@@ -39,6 +52,7 @@ model SuperAdmin {
   userId         Int       @unique
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
+
   user           User     @relation(fields: [userId], references: [id])
 }
 
@@ -52,5 +66,19 @@ model HrAdmin {
   userId         Int       @unique
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
+
   user           User     @relation(fields: [userId], references: [id])
+}
+
+// ======================
+// Auth Provider Model
+// ======================
+
+model AuthProvider {
+  id         String  @id @default(uuid())
+  provider   String
+  providerId String
+  userId     Int
+
+  user       User   @relation(fields: [userId], references: [id])
 }

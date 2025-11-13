@@ -21,4 +21,12 @@ export default {
     reset_pass_secret: process.env.RESET_PASS_TOKEN,
     reset_pass_token_expires_in: process.env.RESET_PASS_TOKEN_EXPIRES_IN,
   },
+  bcrypt: {
+    salt_round: Number(process.env.BCRYPT_SALT_ROUND) || 10,
+  },
+
+  super_admin: {
+    super_admin_email: process.env.SUPER_ADMIN_EMAIL,
+    super_admin_password: process.env.SUPER_ADMIN_PASSWORD,
+  },
 };

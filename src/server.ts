@@ -1,6 +1,7 @@
+import dotenv from "dotenv";
 import http, { Server } from "http";
 import app from "./app";
-import dotenv from "dotenv";
+import { seedSuperAdmin } from "./app/utils/seedSuperAdmin";
 
 dotenv.config();
 
@@ -19,6 +20,9 @@ async function startServer() {
     process.exit(1);
   }
 }
+(async () => {
+  await seedSuperAdmin();
+})();
 
 /**
  * Gracefully shutdown the server and close database connections.
