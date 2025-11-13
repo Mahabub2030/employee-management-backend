@@ -53,7 +53,6 @@ const getAllFromDB = async (params: IAdminFilterRequest, options: IOptions) => {
             createdAt: "desc",
           },
   });
-  console.log(result);
 
   const total = await prisma.admin.count({
     where: whereConditons,
@@ -69,10 +68,10 @@ const getAllFromDB = async (params: IAdminFilterRequest, options: IOptions) => {
   };
 };
 
-const getByIdFromDB = async (id: string): Promise<Admin | null> => {
+const getByIdFromDB = async (userId: string): Promise<Admin | null> => {
   const result = await prisma.admin.findUnique({
     where: {
-      id,
+      userId,
       isDeleted: false,
     },
   });
