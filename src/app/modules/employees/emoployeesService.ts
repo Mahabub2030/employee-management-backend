@@ -81,8 +81,22 @@ const getEmployeeById = async (id: string) => {
   return result;
 };
 
+const softDelete = async (id: string) => {
+  return await prisma.$transaction(async (transactionClient) => {
+    const deteleEmployee = await transactionClient.employee.update({
+      where: { id },
+      data: {
+        isDeleted: true,
+      },
+    });
+
+    return deteleEmployee;
+  });
+};
+
 export const EmployeesService = {
   createEmployees,
   getAllEmployees,
   getEmployeeById,
+  softDelete,
 };

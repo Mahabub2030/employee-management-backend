@@ -43,9 +43,21 @@ const getEmployeeById = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
+const softDelete = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const result = await EmployeesService.softDelete(id);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: " Employees soft deleted successfully",
+    data: result,
+  });
+});
 
 export const EmployeesControlers = {
   createEmployees,
   getAllEmployees,
   getEmployeeById,
+  softDelete,
 };
