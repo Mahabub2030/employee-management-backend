@@ -95,7 +95,7 @@ const softDelete = async (id: string) => {
 };
 
 const updateEmployees = async (payload: any) => {
-  const { id, email } = payload;
+  const { id, ...data } = payload;
 
   const employeeInfo = await prisma.employee.findFirstOrThrow({
     where: {
