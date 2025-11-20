@@ -7,13 +7,11 @@ enum UserRole {
   GUEST
 }
 
-// enum UserStatus {
-// isACTIVE,
-// INACTIVE,
-// isDELETED,
-// BLOCKED
-
-// }
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  IS_DELETED
+}
 enum EmployeeStatus {
   ACTIVE
   INACTIVE

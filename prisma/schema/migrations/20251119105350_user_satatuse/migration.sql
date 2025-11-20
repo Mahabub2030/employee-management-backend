@@ -1,0 +1,2 @@
+-- CreateEnum
+CREATE TYPE "UserStatus" AS ENUM ('IS_ACTIVE', 'INACTIVE', 'IS_DELETED');

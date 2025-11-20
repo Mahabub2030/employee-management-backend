@@ -1,24 +1,24 @@
 model User {
-  id                 String         @id @default(uuid())
+  id                 String          @id @default(uuid())
   name               String
-  email              String         @unique
+  email              String          @unique
   profilePhoto       String?
   password           String
   idNumber           String?
-  role               UserRole       @default(GUEST)
-  needPasswordChange Boolean        @default(true)
-  status             EmployeeStatus @default(ACTIVE)
-  isDeleted          Boolean        @default(false)
-  createdAt          DateTime       @default(now())
-  updatedAt          DateTime       @updatedAt
+  role               UserRole        @default(GUEST)
+  needPasswordChange Boolean         @default(true)
+  status             EmployeeStatus  @default(ACTIVE)
+  isDeleted          Boolean         @default(false)
+  createdAt          DateTime        @default(now())
+  updatedAt          DateTime        @updatedAt
 
   //                 Relations
-  admin      Admin?
-  superAdmin SuperAdmin?
-  hrAdmin    HrAdmin?
+  admin              Admin?
+  superAdmin         SuperAdmin?
+  hrAdmin            HrAdmin?
 
   // ✅ Add this relation
-  authProviders AuthProvider[]
+  authProviders      AuthProvider[]
 }
 
 // ======================
@@ -26,51 +26,51 @@ model User {
 // ======================
 
 model Admin {
-  id             String   @id @default(uuid())
+  id             String    @id @default(uuid())
   name           String
-  email          String   @unique
+  email          String    @unique
   password       String
-  idNumber       String   @unique
+  idNumber       String    @unique
   profilePhoto   String?
-  changePassword Boolean  @default(true)
-  isDeleted      Boolean  @default(false)
-  userId         String   @unique
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  changePassword Boolean   @default(true)
+  isDeleted      Boolean   @default(false)
+  userId         String    @unique
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
 
-  user User @relation(fields: [userId], references: [id])
+  user           User     @relation(fields: [userId], references: [id])
 }
 
 model SuperAdmin {
-  id             String   @id @default(uuid())
+  id             String    @id @default(uuid())
   name           String
-  email          String   @unique
+  email          String    @unique
   password       String
-  idNumber       String   @unique
+  idNumber       String    @unique
   profilePhoto   String?
-  changePassword Boolean  @default(true)
-  userId         String   @unique
-  isDeleted      Boolean  @default(false)
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  changePassword Boolean   @default(true)
+  userId         String    @unique
+  isDeleted      Boolean   @default(false)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
 
-  user User @relation(fields: [userId], references: [id])
+  user           User     @relation(fields: [userId], references: [id])
 }
 
 model HrAdmin {
-  id             String   @id @default(uuid())
+  id             String    @id @default(uuid())
   name           String
-  email          String   @unique
+  email          String    @unique
   password       String
-  idNumber       String   @unique
+  idNumber       String    @unique
   profilePhoto   String?
-  changePassword Boolean  @default(true)
-  userId         String   @unique
-  isDeleted      Boolean  @default(false)
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  changePassword Boolean   @default(true)
+  userId         String    @unique
+  isDeleted      Boolean   @default(false)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
 
-  user User @relation(fields: [userId], references: [id])
+  user           User     @relation(fields: [userId], references: [id])
 }
 
 // ======================
@@ -78,7 +78,7 @@ model HrAdmin {
 // ======================
 
 model AuthProvider {
-  id         String @id @default(uuid())
+  id         String  @id @default(uuid())
   provider   String
   providerId String
   user       User   @relation(fields: [userId], references: [id])
