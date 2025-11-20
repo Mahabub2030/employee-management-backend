@@ -61,6 +61,11 @@ const refreshToken = async (token: string) => {
     config.JWT.ACCESS_TOKEN_SECRET as string,
     config.JWT.ACCESS_TOKEN_EXPIRATION
   );
+
+  return {
+    accessToken,
+    needPasswordChange: userData.needPasswordChange,
+  };
 };
 
 const changePassword = async (user: any, payload: any) => {
