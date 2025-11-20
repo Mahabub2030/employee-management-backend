@@ -1,21 +1,49 @@
 import { Request, Response } from "express";
+import httpStatus from "http-status";
 import catchAsync from "../../shared/catchAsync";
 import sendResponse from "../../shared/sendResponse";
 import { AuthService } from "./auth.service";
-
 const login = catchAsync(async (req: Request, res: Response) => {
   const result = await AuthService.login(req.body);
+  const { accessToken, refreshToken, needPasswordChange } = result;
 
-  console.log(req.body);
+  res.cookie("accessToken", accessToken, {
+    secure: true,
+    httpOnly: true,
+    sameSite: "none",
+    maxAge: 1000 * 60 * 60,
+  });
+  res.cookie("refreshToken", refreshToken, {
+    secure: true,
+    httpOnly: true,
+    sameSite: "none",
+    maxAge: 1000 * 60 * 60 * 24 * 90,
+  });
 
   sendResponse(res, {
     statusCode: 201,
     success: true,
     message: "User loggedin successfully!",
+    data: {
+      needPasswordChange,
+    },
+  });
+});
+
+const getMe = catchAsync(async (req: Request, res: Response) => {
+  const userSession = req.cookies;
+  const result = await AuthService.getMe(userSession);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "User retrive successfully!",
     data: result,
   });
 });
 
 export const AuthController = {
   login,
+
+  getMe,
 };
