@@ -1,10 +1,12 @@
 import { UserStatus } from "@prisma/client";
 import bcrypt from "bcryptjs";
 import httpStatus from "http-status";
+import { Secret } from "jsonwebtoken";
 import config from "../../../config";
 import ApiError from "../../errors/apiError";
 import { jwtHelper } from "../../helpers/jwtHelper";
 import { prisma } from "../../shared/prisma";
+
 const login = async (payload: { email: string; password: string }) => {
   const user = await prisma.user.findFirstOrThrow({
     where: {
@@ -40,7 +42,6 @@ const login = async (payload: { email: string; password: string }) => {
 
 const refreshToken = async (token: string) => {
   let decodedData;
-
   try {
     decodedData = jwtHelper.verifyToken(token, config.JWT.REFRESH_TOKEN_SECRET);
   } catch (err) {
@@ -58,8 +59,8 @@ const refreshToken = async (token: string) => {
       email: userData.email,
       role: userData.role,
     },
-    config.JWT.ACCESS_TOKEN_SECRET as string,
-    config.JWT.ACCESS_TOKEN_EXPIRATION
+    config.JWT.ACCESS_TOKEN_SECRET as Secret,
+    config.JWT.ACCESS_TOKEN_EXPIRATION as string
   );
 
   return {
@@ -102,11 +103,12 @@ const changePassword = async (user: any, payload: any) => {
     message: "Password changed successfully!",
   };
 };
-const getMe = async (sesssion: any) => {
-  const accessToken = sesssion.accessToken;
+const getMe = async (session: any) => {
+  const accessToken = session.accessToken;
+
   const decodedData = jwtHelper.verifyToken(
     accessToken,
-    config.JWT.ACCESS_TOKEN_SECRET as string
+    config.JWT.ACCESS_TOKEN_SECRET as Secret
   );
 
   const userData = await prisma.user.findUniqueOrThrow({

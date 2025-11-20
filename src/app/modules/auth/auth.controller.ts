@@ -41,7 +41,6 @@ const getMe = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
-
 export const AuthController = {
   login,
 
