@@ -8,7 +8,7 @@ import { jwtHelper } from "../../helpers/jwtHelper";
 import { prisma } from "../../shared/prisma";
 
 const login = async (payload: { email: string; password: string }) => {
-  const user = await prisma.user.findFirstOrThrow({
+  const user = await prisma.user.findUniqueOrThrow({
     where: {
       email: payload.email,
       status: UserStatus.ACTIVE,
@@ -105,7 +105,6 @@ const changePassword = async (user: any, payload: any) => {
 };
 const getMe = async (session: any) => {
   const accessToken = session.accessToken;
-
   const decodedData = jwtHelper.verifyToken(
     accessToken,
     config.JWT.ACCESS_TOKEN_SECRET as Secret
