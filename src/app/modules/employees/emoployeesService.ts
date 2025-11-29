@@ -1,4 +1,4 @@
-import { Prisma } from "@prisma/client";
+import { Employee, Prisma } from "@prisma/client";
 import { IOptions, paginationHelper } from "../../helpers/paginationHelper";
 import { prisma } from "../../shared/prisma";
 import { employeeSearchableFields } from "./employees.constant";
@@ -94,31 +94,24 @@ const softDelete = async (id: string) => {
   });
 };
 
-const updateEmployees = async (payload: any) => {
-  const { id, ...data } = payload;
-
-  const employeeInfo = await prisma.employee.findFirstOrThrow({
+const updateEmployees = async (
+  id: string,
+  data: Partial<Employee>
+): Promise<Employee> => {
+  await prisma.employee.findUniqueOrThrow({
     where: {
-      email: payload.email,
+      id,
       isDeleted: false,
     },
   });
 
-  return await prisma.$transaction(async (tnx) => {
-    await tnx.employee.update({
-      where: {
-        id: employeeInfo.id,
-      },
-      data: employeeInfo,
-    });
-
-    const result = await tnx.employee.findUnique({
-      where: {
-        id: employeeInfo.id,
-      },
-    });
-    return result;
+  const result = await prisma.employee.update({
+    where: {
+      id,
+    },
+    data,
   });
+  return result;
 };
 
 export const EmployeesService = {

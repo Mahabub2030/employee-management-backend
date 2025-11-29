@@ -1,7 +1,7 @@
 enum UserRole {
-  SUPERADMIN
+  SUPER_ADMIN
   ADMIN
-  HRADMIN
+  HR_ADMIN 
   ENGINEER
   SUPERVISOR
   GUEST
@@ -15,18 +15,17 @@ enum UserStatus {
 enum EmployeeStatus {
   ACTIVE
   INACTIVE
-  TERMINATED
   ON_LEAVE
+  TRANSFER
+  TERMINATED
 }
-
+enum Nationality {
+  SAUDI
+  NON_SAUDI
+}
 enum Gender {
   MALE
   FEMALE
 }
 
-enum MaritalStatus {
-  SINGLE
-  MARRIED
-  DIVORCED
-  WIDOWED
-}
+

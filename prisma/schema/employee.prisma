@@ -1,3 +1,4 @@
+
 model Employee {
   id                     String          @id @default(uuid())
   name                   String
@@ -9,12 +10,48 @@ model Employee {
   joiningDate            DateTime
   email                  String          @unique
   phoneNumber            String          @unique
-  isDeleted              Boolean         @default(false) // Soft delete
+  isDeleted              Boolean         @default(false)
   gender                 String
   nationality            String
-  status                 EmployeeStatus  @default(ACTIVE) // Enum: ACTIVE, INACTIVE, etc.
+  status                 EmployeeStatus  @default(ACTIVE)
   createdAt              DateTime        @default(now())
-  updatedAt              DateTime        @updatedAt // Auto-updates on modification
+  updatedAt              DateTime        @updatedAt
 
-  @@map("Employees") // Maps this model to the table "Employees"
+  employeeIds            EmployeeId[]   @relation("EmployeeIdsRelation")
+  employeeFiles          EmployeeFile[] @relation("EmployeeFilesRelation")
+
+  @@map("Employees")
+}
+
+model EmployeeId {
+  id               String    @id @default(uuid())
+  name             String
+  jobTitle         String
+  employeeId       String    @unique
+  group            String
+  issuedDate       DateTime
+  expiryDate       DateTime
+  ReamingDate      Int
+  iqamaDate        String
+  iqamaExpiryDate  String
+  RemaingIqamaDate Int
+  authority        String
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  employee         Employee @relation("EmployeeIdsRelation", fields: [employeeId], references: [id])
+
+  @@map("EmployeeIds")
+}
+
+
+model EmployeeFile {
+  id         String    @id @default(uuid())
+  employeeId String
+  fileType   String
+  filePath   String
+  uploadedAt DateTime  @default(now())
+  employee   Employee @relation("EmployeeFilesRelation", fields: [employeeId], references: [id])
+
+  @@map("EmployeeFiles")
 }

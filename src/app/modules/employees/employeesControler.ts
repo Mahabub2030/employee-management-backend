@@ -56,8 +56,9 @@ const softDelete = catchAsync(async (req: Request, res: Response) => {
 });
 
 const updateEmployees = catchAsync(async (req: Request, res: Response) => {
-  const result = await EmployeesService.updateEmployees(req.body);
-
+  const { id } = req.params;
+  const data = req.body;
+  const result = await EmployeesService.updateEmployees(id, data);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
