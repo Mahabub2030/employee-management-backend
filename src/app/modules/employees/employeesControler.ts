@@ -2,10 +2,11 @@ import { Request, Response } from "express";
 import pick from "../../helpers/pick";
 import catchAsync from "../../shared/catchAsync";
 import sendResponse from "../../shared/sendResponse";
-import { EmployeesService } from "./emoployeesService";
+
 import { employeeFilterableFields } from "./employees.constant";
 
 import httpStatus from "http-status";
+import { EmployeesService } from "./emoployeesService";
 
 const createEmployees = catchAsync(async (req: Request, res: Response) => {
   //   const employes = req.employes;

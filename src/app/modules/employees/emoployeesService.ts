@@ -1,14 +1,18 @@
 import { Employee, Prisma } from "@prisma/client";
+import { Request } from "express";
+import { fileUploder } from "../../helpers/fileUploader";
 import { IOptions, paginationHelper } from "../../helpers/paginationHelper";
 import { prisma } from "../../shared/prisma";
 import { employeeSearchableFields } from "./employees.constant";
 
-const createEmployees = async (payload: Prisma.EmployeeCreateInput) => {
+const createEmployees = async (req: Request) => {
+  const file = req.file;
+  if (file) {
+    const uploadToCloudinary = await fileUploder.uploadTocloudinary(file);
+    req.body.icon = uploadToCloudinary?.secure_url;
+  }
   const result = await prisma.employee.create({
-    data: {
-      ...payload,
-      isDeleted: false,
-    },
+    data: req.body,
   });
   return result;
 };
