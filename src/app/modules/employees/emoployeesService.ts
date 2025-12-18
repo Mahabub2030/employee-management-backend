@@ -1,18 +1,17 @@
 import { Employee, Prisma } from "@prisma/client";
-import { Request } from "express";
-import { fileUploder } from "../../helpers/fileUploader";
 import { IOptions, paginationHelper } from "../../helpers/paginationHelper";
 import { prisma } from "../../shared/prisma";
 import { employeeSearchableFields } from "./employees.constant";
 
-const createEmployees = async (req: Request) => {
-  const file = req.file;
-  if (file) {
-    const uploadToCloudinary = await fileUploder.uploadTocloudinary(file);
-    req.body.icon = uploadToCloudinary?.secure_url;
+const createEmployees = async (payload: Employee) => {
+  const employeeData = payload;
+
+  if (!employeeData || Object.keys(employeeData).length === 0) {
+    throw new Error("Employee data missing. Check JSON body and headers.");
   }
+
   const result = await prisma.employee.create({
-    data: req.body,
+    data: employeeData,
   });
   return result;
 };
@@ -100,20 +99,25 @@ const softDelete = async (id: string) => {
 
 const updateEmployees = async (
   id: string,
-  data: Partial<Employee>
+  payload: Partial<Employee>
 ): Promise<Employee> => {
-  await prisma.employee.findUniqueOrThrow({
+  const existingEmployee = await prisma.employee.findFirst({
     where: {
       id,
       isDeleted: false,
     },
   });
 
+  if (!existingEmployee) {
+    throw new Error("Employee not found or has been deleted");
+  }
+
   const result = await prisma.employee.update({
-    where: {
-      id,
+    where: { id },
+    data: {
+      ...payload,
+      updatedAt: new Date(),
     },
-    data,
   });
   return result;
 };

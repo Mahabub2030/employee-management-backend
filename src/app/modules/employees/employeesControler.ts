@@ -9,7 +9,6 @@ import httpStatus from "http-status";
 import { EmployeesService } from "./emoployeesService";
 
 const createEmployees = catchAsync(async (req: Request, res: Response) => {
-  //   const employes = req.employes;
   const result = await EmployeesService.createEmployees(req.body);
 
   sendResponse(res, {
