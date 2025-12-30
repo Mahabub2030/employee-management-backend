@@ -1,105 +1,135 @@
-import { Prisma } from "@prisma/client";
-import bcrypt from "bcrypt";
-import { IOptions, paginationHelper } from "../../helpers/paginationHelper";
-import { prisma } from "../../shared/prisma";
+import bcryptjs from "bcryptjs";
+import httpStatus from "http-status-codes";
+import { JwtPayload } from "jsonwebtoken";
+import { envVars } from "../../config/env";
+import AppError from "../../errorHelpers/AppError";
+import { QueryBuilder } from "../../utils/QueryBuilder";
 import { userSearchableFields } from "./user.constant";
-import { createUserInput } from "./user.interface";
+import { IAuthProvider, IUser, Role } from "./user.interface";
+import { User } from "./user.model";
 
-// normal User Create here
-const createUser = async (payload: createUserInput) => {
-  const hashPassword = await bcrypt.hash(payload.password, 10);
+const createUser = async (payload: Partial<IUser>) => {
+  const { email, password, ...rest } = payload;
 
-  const result = await prisma.user.create({
-    data: {
-      name: payload.name,
-      email: payload.email,
-      password: hashPassword,
-    },
-  });
-  return result;
-};
-// admin Create here
-const createAdmin = async (payload: { password: string; admin: any }) => {
-  const hashPassword = await bcrypt.hash(payload.password, 10);
+  const isUserExist = await User.findOne({ email });
 
-  const result = await prisma.user.create({
-    data: {
-      name: payload.admin.name,
-      email: payload.admin.email,
-      password: hashPassword,
-      role: "ADMIN",
-    },
-  });
-  return result;
-};
-// caretHrAdmin Create here
-const createHrAdmin = async (payload: { password: string; hrAdmin: any }) => {
-  const hashPassword = await bcrypt.hash(payload.password, 10);
-  const result = await prisma.user.create({
-    data: {
-      name: payload.hrAdmin.name,
-      email: payload.hrAdmin.email,
-      password: hashPassword,
-      role: "HR_ADMIN",
-    },
-  });
-  return result;
-};
-
-const getAllUsers = async (params: any, options: IOptions) => {
-  const { page, limit, skip, sortBy, sortOrder } =
-    paginationHelper.calculatePagination(options);
-  const { searchTerm, ...filterData } = params;
-
-  const andConditions: Prisma.UserWhereInput[] = [];
-
-  if (searchTerm) {
-    andConditions.push({
-      OR: userSearchableFields.map((field) => ({
-        [field]: {
-          contains: searchTerm,
-          mode: "insensitive",
-        },
-      })),
-    });
-  }
-  if (Object.keys(filterData).length > 0) {
-    andConditions.push({
-      AND: Object.keys(filterData).map((key) => ({
-        [key]: {
-          equals: (filterData as any)[key],
-        },
-      })),
-    });
+  if (isUserExist) {
+    throw new AppError(httpStatus.BAD_REQUEST, "User Already Exist");
   }
 
-  const whereConditions: Prisma.UserWhereInput =
-    andConditions.length > 0 ? { AND: andConditions } : {};
-  const result = await prisma.user.findMany({
-    skip,
-    take: limit,
+  const hashedPassword = await bcryptjs.hash(
+    password as string,
+    Number(envVars.BCRYPT_SALT_ROUND)
+  );
 
-    where: whereConditions,
-    orderBy: {
-      [sortBy]: sortOrder,
-    },
+  const authProvider: IAuthProvider = {
+    provider: "credentials",
+    providerId: email as string,
+  };
+
+  const user = await User.create({
+    email,
+    password: hashedPassword,
+    auths: [authProvider],
+    ...rest,
   });
-  const total = await prisma.user.count({
-    where: whereConditions,
+
+  return user;
+};
+
+const updateUser = async (
+  userId: string,
+  payload: Partial<IUser>,
+  decodedToken: JwtPayload
+) => {
+  if (decodedToken.role === Role.USER || decodedToken.role === Role.GUIDE) {
+    if (userId !== decodedToken.userId) {
+      throw new AppError(401, "You are not authorized");
+    }
+  }
+
+  const ifUserExist = await User.findById(userId);
+
+  if (!ifUserExist) {
+    throw new AppError(httpStatus.NOT_FOUND, "User Not Found");
+  }
+
+  if (
+    decodedToken.role === Role.ADMIN &&
+    ifUserExist.role === Role.SUPER_ADMIN
+  ) {
+    throw new AppError(401, "You are not authorized");
+  }
+
+  /**
+   * email - can not update
+   * name, phone, password address
+   * password - re hashing
+   *  only admin superadmin - role, isDeleted...
+   *
+   * promoting to superadmin - superadmin
+   */
+
+  if (payload.role) {
+    if (decodedToken.role === Role.USER || decodedToken.role === Role.GUIDE) {
+      throw new AppError(httpStatus.FORBIDDEN, "You are not authorized");
+    }
+
+    // if (payload.role === Role.SUPER_ADMIN && decodedToken.role === Role.ADMIN) {
+    //     throw new AppError(httpStatus.FORBIDDEN, "You are not authorized");
+    // }
+  }
+
+  if (payload.isActive || payload.isDeleted || payload.isVerified) {
+    if (decodedToken.role === Role.USER || decodedToken.role === Role.GUIDE) {
+      throw new AppError(httpStatus.FORBIDDEN, "You are not authorized");
+    }
+  }
+
+  const newUpdatedUser = await User.findByIdAndUpdate(userId, payload, {
+    new: true,
+    runValidators: true,
   });
+
+  return newUpdatedUser;
+};
+
+const getAllUsers = async (query: Record<string, string>) => {
+  const queryBuilder = new QueryBuilder(User.find(), query);
+  const usersData = queryBuilder
+    .filter()
+    .search(userSearchableFields)
+    .sort()
+    .fields()
+    .paginate();
+
+  const [data, meta] = await Promise.all([
+    usersData.build(),
+    queryBuilder.getMeta(),
+  ]);
+
   return {
-    meta: {
-      page,
-      limit,
-      total,
-    },
-    data: result,
+    data,
+    meta,
+  };
+};
+const getSingleUser = async (id: string) => {
+  const user = await User.findById(id).select("-password");
+  return {
+    data: user,
+  };
+};
+const getMe = async (userId: string) => {
+  const user = await User.findById(userId).select("-password");
+  return {
+    data: user,
   };
 };
 
-export const UsersService = {
+export const UserServices = {
   createUser,
   getAllUsers,
-  createAdmin,
-  createHrAdmin,
+  getSingleUser,
+  updateUser,
+  getMe,
 };

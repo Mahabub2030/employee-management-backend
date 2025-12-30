@@ -1,14 +1,12 @@
-import { UserRole } from "@prisma/client";
 import bcryptjs from "bcryptjs";
-import { v4 as uuidv4 } from "uuid";
-import { prisma } from "../shared/prisma";
+import { envVars } from "../config/env";
+import { IAuthProvider, IUser, Role } from "../modules/user/user.interface";
+import { User } from "../modules/user/user.model";
 
 export const seedSuperAdmin = async () => {
   try {
-    const isSuperAdminExist = await prisma.user.findUnique({
-      where: {
-        email: process.env.SUPER_ADMIN_EMAIL,
-      },
+    const isSuperAdminExist = await User.findOne({
+      email: envVars.SUPER_ADMIN_EMAIL,
     });
 
     if (isSuperAdminExist) {
@@ -19,31 +17,28 @@ export const seedSuperAdmin = async () => {
     console.log("Trying to create Super Admin...");
 
     const hashedPassword = await bcryptjs.hash(
-      process.env.SUPER_ADMIN_PASSWORD as string,
-      Number(process.env.BCRYPT_SALT_ROUND)
+      envVars.SUPER_ADMIN_PASSWORD,
+      Number(envVars.BCRYPT_SALT_ROUND)
     );
-    const userId = uuidv4();
-    const superadmin = await prisma.user.create({
-      data: {
-        id: userId,
-        name: "Super Admin",
-        email: process.env.SUPER_ADMIN_EMAIL as string,
-        password: hashedPassword,
-        role: UserRole.SUPER_ADMIN,
-        needPasswordChange: true,
-        authProviders: {
-          create: [
-            {
-              provider: "credentials",
-              providerId: process.env.SUPER_ADMIN_EMAIL as string,
-            },
-          ],
-        },
-      },
-    });
 
-    console.log("Super Admin Created Successfully:", superadmin);
+    const authProvider: IAuthProvider = {
+      provider: "credentials",
+      providerId: envVars.SUPER_ADMIN_EMAIL,
+    };
+
+    const payload: IUser = {
+      name: "Super admin",
+      role: Role.SUPER_ADMIN,
+      email: envVars.SUPER_ADMIN_EMAIL,
+      password: hashedPassword,
+      isVerified: true,
+      auths: [authProvider],
+    };
+
+    const superadmin = await User.create(payload);
+    console.log("Super Admin Created Successfuly! \n");
+    console.log(superadmin);
   } catch (error) {
-    console.error("Error creating Super Admin:", error);
+    console.log(error);
   }
 };

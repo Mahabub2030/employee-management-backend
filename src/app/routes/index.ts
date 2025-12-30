@@ -1,30 +1,25 @@
-import express from "express";
-import { AdminRoutes } from "../modules/admin/admin.routes";
-import { authRoutes } from "../modules/auth/auth.routes";
-import { EmployeesRoutes } from "../modules/employees/employeesRouter";
-import { userRoutes } from "../modules/user/user.routes";
+import { Router } from "express";
+import { EmployeeRoutes } from "../modules/employee/employee.route";
+import { UserRoutes } from "../modules/user/user.route";
 
-const router = express.Router();
+export const router = Router();
 
 const moduleRoutes = [
   {
     path: "/user",
-    route: userRoutes,
-  },
-  {
-    path: "/auth",
-    route: authRoutes,
+    route: UserRoutes,
   },
   {
     path: "/employees",
-    route: EmployeesRoutes,
-  },
-  {
-    path: "/admin",
-    route: AdminRoutes,
+    route: EmployeeRoutes,
   },
 ];
+moduleRoutes.forEach((route) => {
+  router.use(route.path, route.route);
+});
 
-moduleRoutes.forEach((route) => router.use(route.path, route.route));
-
-export default router;
+// router.use("/user", UserRoutes)
+// router.use("/tour", TourRoutes)
+// router.use("/division", DivisionRoutes)
+// router.use("/booking", BookingRoutes)
+// router.use("/user", UserRoutes)
