@@ -2,11 +2,24 @@ import compression from "compression";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import express from "express";
+import expressSession from "express-session";
+import passport from "passport";
+import { envVars } from "./app/config/env";
+import "./app/config/passport";
 import { router } from "./app/routes";
 
-const app = express();
+export const app = express();
 
 // Middleware
+app.use(
+  expressSession({
+    secret: envVars.FRONTEND_URL,
+    resave: false,
+    saveUninitialized: false,
+  })
+);
+app.use(passport.initialize());
+app.use(passport.session());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
