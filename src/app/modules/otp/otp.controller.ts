@@ -1,0 +1,19 @@
+import { Request, Response } from "express";
+import httpStatus from "http-status";
+import { catchAsync } from "../../utils/catchAsync";
+import { sendResponse } from "../../utils/sendResponse";
+import { OTPService } from "./otp.services";
+
+const sendOTP = catchAsync(async (req: Request, res: Response) => {
+  const { email } = req.body;
+  await OTPService.sendOTP(email);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Send OTP successfully",
+    data: null,
+  });
+});
+export const OTPController = {
+  sendOTP,
+};

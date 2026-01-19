@@ -16,7 +16,7 @@ app.use(
     secret: envVars.FRONTEND_URL,
     resave: false,
     saveUninitialized: false,
-  })
+  }),
 );
 app.use(passport.initialize());
 app.use(passport.session());
@@ -30,7 +30,7 @@ app.use(
   cors({
     origin: "http://localhost:3000",
     credentials: true,
-  })
+  }),
 );
 app.use("/api/v1", router);
 

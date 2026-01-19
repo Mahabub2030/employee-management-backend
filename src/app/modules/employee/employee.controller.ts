@@ -16,7 +16,7 @@ const createEmployee = catchAsync(async (req: Request, res: Response) => {
 const getAllEmployeeData = catchAsync(async (req: Request, res: Response) => {
   const query = req.query;
   const result = await EmployeeService.getAllEmployeeData(
-    query as Record<string, string>
+    query as Record<string, string>,
   );
   sendResponse(res, {
     statusCode: 201,
@@ -36,6 +36,7 @@ const getSingaleEmployee = catchAsync(async (req: Request, res: Response) => {
     data: result.data,
   });
 });
+
 const updatedEmployees = catchAsync(async (req: Request, res: Response) => {
   const id = req.params.id;
   const payload: IEmployee = {
