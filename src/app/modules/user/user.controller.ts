@@ -44,7 +44,7 @@ const createUser = catchAsync(
       message: "User Created Successfully",
       data: user,
     });
-  }
+  },
 );
 const updateUser = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -58,7 +58,7 @@ const updateUser = catchAsync(
     const user = await UserServices.updateUser(
       userId,
       payload,
-      verifiedToken as JwtPayload
+      verifiedToken as JwtPayload,
     );
 
     // res.status(httpStatus.CREATED).json({
@@ -72,14 +72,14 @@ const updateUser = catchAsync(
       message: "User Updated Successfully",
       data: user,
     });
-  }
+  },
 );
 
 const getAllUsers = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const query = req.query;
     const result = await UserServices.getAllUsers(
-      query as Record<string, string>
+      query as Record<string, string>,
     );
 
     // res.status(httpStatus.OK).json({
@@ -94,7 +94,7 @@ const getAllUsers = catchAsync(
       data: result.data,
       meta: result.meta,
     });
-  }
+  },
 );
 const getMe = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -112,7 +112,7 @@ const getMe = catchAsync(
       message: "Your profile Retrieved Successfully",
       data: result.data,
     });
-  }
+  },
 );
 const getSingleUser = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -124,7 +124,7 @@ const getSingleUser = catchAsync(
       message: "User Retrieved Successfully",
       data: result.data,
     });
-  }
+  },
 );
 
 // function => try-catch catch => req-res function

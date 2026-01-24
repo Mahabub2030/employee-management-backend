@@ -18,6 +18,12 @@ app.use(
     saveUninitialized: false,
   }),
 );
+app.use(
+  cors({
+    origin: "http://localhost:5173", // frontend URL
+    credentials: true,
+  }),
+);
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.json());
@@ -26,12 +32,6 @@ app.use(cors());
 app.use(compression());
 app.use(cookieParser());
 
-app.use(
-  cors({
-    origin: "http://localhost:3000",
-    credentials: true,
-  }),
-);
 app.use("/api/v1", router);
 
 // Default route for testing
