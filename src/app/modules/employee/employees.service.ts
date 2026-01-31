@@ -17,9 +17,8 @@ const createEmployee = async (payload: IEmployee) => {
 };
 
 const getAllEmployeeData = async (query: Record<string, string>) => {
-  const queryBuilder = new QueryBuilder(Employee.find({}), query);
-  const emplyees = await Employee.find({});
-  const employeeData = queryBuilder
+  const queryBuilder = new QueryBuilder(Employee.find(), query);
+  const emplyees = await queryBuilder
     .search(employeeSearchableFields)
     .filter()
     .sort()
@@ -27,7 +26,7 @@ const getAllEmployeeData = async (query: Record<string, string>) => {
     .paginate();
   const [data, meta] = await Promise.all([
     emplyees,
-    // employeeData.build(),
+    emplyees.build(),
     queryBuilder.getMeta(),
   ]);
   return {

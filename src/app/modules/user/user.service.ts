@@ -19,7 +19,7 @@ const createUser = async (payload: Partial<IUser>) => {
 
   const hashedPassword = await bcryptjs.hash(
     password as string,
-    Number(envVars.BCRYPT_SALT_ROUND)
+    Number(envVars.BCRYPT_SALT_ROUND),
   );
 
   const authProvider: IAuthProvider = {
@@ -40,9 +40,9 @@ const createUser = async (payload: Partial<IUser>) => {
 const updateUser = async (
   userId: string,
   payload: Partial<IUser>,
-  decodedToken: JwtPayload
+  decodedToken: JwtPayload,
 ) => {
-  if (decodedToken.role === Role.USER || decodedToken.role === Role.GUIDE) {
+  if (decodedToken.role === Role.USER || decodedToken.role === Role.USER) {
     if (userId !== decodedToken.userId) {
       throw new AppError(401, "You are not authorized");
     }
@@ -71,7 +71,7 @@ const updateUser = async (
    */
 
   if (payload.role) {
-    if (decodedToken.role === Role.USER || decodedToken.role === Role.GUIDE) {
+    if (decodedToken.role === Role.USER || decodedToken.role === Role.USER) {
       throw new AppError(httpStatus.FORBIDDEN, "You are not authorized");
     }
 
@@ -81,7 +81,7 @@ const updateUser = async (
   }
 
   if (payload.isActive || payload.isDeleted || payload.isVerified) {
-    if (decodedToken.role === Role.USER || decodedToken.role === Role.GUIDE) {
+    if (decodedToken.role === Role.USER || decodedToken.role === Role.USER) {
       throw new AppError(httpStatus.FORBIDDEN, "You are not authorized");
     }
   }

@@ -12,6 +12,9 @@ export interface IEmployee {
   employeeId: number;
   idNumber: number;
   jobTitle: string;
+  email: string;
+  phoneNumber: number;
+  gender: string;
   workLocation: string;
   nationality: string;
   status: EMPLOYEE_STATUS;
