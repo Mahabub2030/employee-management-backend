@@ -14,7 +14,7 @@ export interface IEmployee {
   jobTitle: string;
   email: string;
   phoneNumber: number;
-  gender: string;
+  gender: "male" | "female";
   workLocation: string;
   nationality: string;
   status: EMPLOYEE_STATUS;

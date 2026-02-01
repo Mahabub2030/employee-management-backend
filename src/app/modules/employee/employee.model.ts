@@ -6,6 +6,11 @@ const employeeSchema = new Schema<IEmployee>(
     name: { type: String },
     employeeId: { type: Number, unique: true, required: true },
     idNumber: { type: Number, unique: true, required: true },
+    gender: {
+      type: String,
+      enum: ["male", "female"],
+      required: true,
+    },
     jobTitle: { type: String },
     workLocation: { type: String },
     nationality: { type: String },
@@ -20,11 +25,11 @@ const employeeSchema = new Schema<IEmployee>(
   {
     timestamps: true,
     versionKey: false,
-  }
+  },
 );
 
 export const Employee = model<IEmployee>(
   "Employee",
   employeeSchema,
-  "employees"
+  "employees",
 );

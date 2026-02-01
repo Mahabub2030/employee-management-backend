@@ -1,20 +1,37 @@
 import { z } from "zod";
 
 export const createEmployee = z.object({
-  Jobtitle: z.string(),
-  Name: z.string(),
+  name: z.string().min(1, "Name is required"),
+
+  employeeId: z.number().int().positive("Employee ID must be positive"),
+
+  idNumber: z.number().int().positive("ID Number must be positive"),
+
+  gender: z.enum(["male", "female"]),
+
+  email: z.string().email("Invalid email address"),
+
+  phoneNumber: z.number().int().positive("Phone number must be valid"),
+
+  jobTitle: z.string().min(1, "Job title is required"),
+
   description: z.string().optional(),
-  Joblocation: z.string().optional(),
-  JoiningtDate: z.string().optional().optional(),
+
+  workLocation: z.string().optional(),
+
+  joiningDate: z.string().optional(), // or z.coerce.date()
 });
 
 export const updateEmployeeZodSchema = z.object({
-  Jobtitle: z.string(),
-  Name: z.string(),
+  name: z.string().min(1, "Name is required").optional(),
+
+  jobTitle: z.string().min(1, "Job title is required").optional(),
 
   description: z.string().optional(),
-  Joblocation: z.string().optional(),
-  JoiningtDate: z.string().optional().optional(),
+
+  workLocation: z.string().optional(),
+
+  joiningDate: z.string().optional(), // or z.coerce.date()
 });
 
 export const createTourTypeZodSchema = z.object({
