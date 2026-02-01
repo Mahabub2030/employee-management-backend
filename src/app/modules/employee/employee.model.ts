@@ -30,8 +30,4 @@ const employeeSchema = new Schema<IEmployee>(
   },
 );
 
-export const Employee = model<IEmployee>(
-  "Employee",
-  employeeSchema,
-  "employees",
-);
+export const Employee = model<IEmployee>("Employee", employeeSchema);

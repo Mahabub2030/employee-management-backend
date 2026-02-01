@@ -25,7 +25,6 @@ const getAllEmployeeData = async (query: Record<string, string>) => {
     .fields()
     .paginate();
   const [data, meta] = await Promise.all([
-    emplyees,
     emplyees.build(),
     queryBuilder.getMeta(),
   ]);

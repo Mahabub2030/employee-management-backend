@@ -23,7 +23,7 @@ const getAllEmployeeData = catchAsync(async (req: Request, res: Response) => {
     success: true,
     message: "Employees retrieved successfully",
     data: result.data,
-    // meta: result.meta,
+    meta: result.meta,
   });
 });
 
