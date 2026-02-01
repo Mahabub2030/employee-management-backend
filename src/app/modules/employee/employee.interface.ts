@@ -10,7 +10,7 @@ export enum EMPLOYEE_STATUS {
 export interface IEmployee {
   name: string;
   employeeId: number;
-  idNumber: number;
+  SAPNumber: number;
   jobTitle: string;
   email: string;
   phoneNumber: number;

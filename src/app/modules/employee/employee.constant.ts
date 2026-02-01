@@ -1,1 +1,1 @@
-export const employeeSearchableFields = ["idNumber", "Name", "jobtitle"];
+export const employeeSearchableFields = ["SAPNumber", "Name", "jobtitle"];

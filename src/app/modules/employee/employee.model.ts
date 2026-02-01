@@ -5,7 +5,9 @@ const employeeSchema = new Schema<IEmployee>(
   {
     name: { type: String },
     employeeId: { type: Number, unique: true, required: true },
-    idNumber: { type: Number, unique: true, required: true },
+    SAPNumber: { type: Number, unique: true, required: true },
+    phoneNumber: {},
+    email: {},
     gender: {
       type: String,
       enum: ["male", "female"],

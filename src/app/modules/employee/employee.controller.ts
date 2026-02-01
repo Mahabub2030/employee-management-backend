@@ -26,6 +26,7 @@ const getAllEmployeeData = catchAsync(async (req: Request, res: Response) => {
     // meta: result.meta,
   });
 });
+
 const getSingaleEmployee = catchAsync(async (req: Request, res: Response) => {
   const id = req.params.id;
   const result = await EmployeeService.getSingaleEmployee(id);

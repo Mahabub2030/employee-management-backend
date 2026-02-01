@@ -12,7 +12,7 @@ const createEmployee = async (payload: IEmployee) => {
     throw new Error("This employee already exists");
   }
   const employee = await Employee.create(payload);
-
+  // console.log(payload);
   return employee;
 };
 
