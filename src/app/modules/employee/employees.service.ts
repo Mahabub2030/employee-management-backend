@@ -1,5 +1,3 @@
-import { QueryBuilder } from "../../utils/QueryBuilder";
-import { employeeSearchableFields } from "./employee.constant";
 import { IEmployee } from "./employee.interface";
 import { Employee } from "./employee.model";
 
@@ -16,21 +14,11 @@ const createEmployee = async (payload: IEmployee) => {
   return employee;
 };
 
-const getAllEmployeeData = async (query: Record<string, string>) => {
-  const queryBuilder = new QueryBuilder(Employee.find(), query);
-  const emplyees = await queryBuilder
-    .search(employeeSearchableFields)
-    .filter()
-    .sort()
-    .fields()
-    .paginate();
-  const [data, meta] = await Promise.all([
-    emplyees.build(),
-    queryBuilder.getMeta(),
-  ]);
+const getAllEmployeeData = async () => {
+  const employeeData = await Employee.find();
+
   return {
-    data,
-    meta,
+    data: employeeData,
   };
 };
 
