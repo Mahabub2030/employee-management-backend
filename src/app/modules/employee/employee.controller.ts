@@ -15,15 +15,12 @@ const createEmployee = catchAsync(async (req: Request, res: Response) => {
 });
 const getAllEmployeeData = catchAsync(async (req: Request, res: Response) => {
   const query = req.query;
-  const result = await EmployeeService.getAllEmployeeData(
-    query as Record<string, string>,
-  );
+  const result = await EmployeeService.getAllEmployeeData();
   sendResponse(res, {
     statusCode: 201,
     success: true,
     message: "Employees retrieved successfully",
     data: result.data,
-    meta: result.meta,
   });
 });
 
