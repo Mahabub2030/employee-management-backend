@@ -10,10 +10,10 @@ export enum EMPLOYEE_STATUS {
 export interface IEmployee {
   name: string;
   employeeId: number;
-  SAPNumber: number;
+  SAPNumber: string;
   jobTitle: string;
   email: string;
-  phoneNumber: number;
+  phoneNumber: string;
   gender: "male" | "female";
   workLocation: string;
   nationality: string;

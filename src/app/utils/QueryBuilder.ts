@@ -19,6 +19,7 @@ export class QueryBuilder<T> {
     }
 
     this.modelQuery = this.modelQuery.find(filter); // Tour.find().find(filter)
+
     return this;
   }
 

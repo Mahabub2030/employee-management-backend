@@ -1,3 +1,5 @@
+import { QueryBuilder } from "../../utils/QueryBuilder";
+import { employeeSearchableFields } from "./employee.constant";
 import { IEmployee } from "./employee.interface";
 import { Employee } from "./employee.model";
 
@@ -14,11 +16,22 @@ const createEmployee = async (payload: IEmployee) => {
   return employee;
 };
 
-const getAllEmployeeData = async () => {
-  const employeeData = await Employee.find();
+const getAllEmployeeData = async (query: Record<string, string>) => {
+  const queryBuilder = new QueryBuilder(Employee.find(), query);
+  const employees = queryBuilder
+    .search(employeeSearchableFields)
+    .filter()
+    .sort()
+    .fields()
+    .paginate();
+  const [data, meta] = await Promise.all([
+    employees.build(),
+    queryBuilder.getMeta(),
+  ]);
 
   return {
-    data: employeeData,
+    data,
+    meta,
   };
 };
 
@@ -55,3 +68,6 @@ export const EmployeeService = {
   updatedEmployees,
   deletedEmployees,
 };
+function paginate() {
+  throw new Error("Function not implemented.");
+}
