@@ -7,22 +7,22 @@ const router = Router();
 router.post(
   "/create",
   // validateRequest(createUserZodSchema),
-  EmployeeControlers.createEmployee
+  EmployeeControlers.createEmployee,
 );
 router.get(
   "/all-Employee",
   // validateRequest(createUserZodSchema),
-  EmployeeControlers.getAllEmployeeData
+  EmployeeControlers.getAllEmployeeData,
 );
 router.get(
   "/:id",
   // validateRequest(createUserZodSchema),
-  EmployeeControlers.getSingaleEmployee
+  EmployeeControlers.getSingaleEmployee,
 );
 router.patch(
   "/:id",
   multerUpload.single("file"),
-  EmployeeControlers.updatedEmployees
+  EmployeeControlers.updatedEmployees,
 );
 router.delete("/:id", EmployeeControlers.deletedEmployees);
 
