@@ -1,6 +1,9 @@
 {
   "lockfileVersion": 1,
+<<<<<<< HEAD
   "configVersion": 0,
+=======
+>>>>>>> 019cec825e7a989a52746cf0e1e8edb597805c96
   "workspaces": {
     "": {
       "name": "next-blog",
