@@ -14,7 +14,7 @@ export const globalErrorHandler = async (
   err: any,
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   if (envVars.NODE_ENV === "development") {
     console.log(err);
@@ -26,7 +26,7 @@ export const globalErrorHandler = async (
 
   if (req.files && Array.isArray(req.files) && req.files.length) {
     const imageUrls = (req.files as Express.Multer.File[]).map(
-      (file) => file.path
+      (file) => file.path,
     );
 
     await Promise.all(imageUrls.map((url) => deleteImageFromCLoudinary(url)));

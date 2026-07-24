@@ -21,7 +21,7 @@ router.get(
 );
 router.patch(
   "/:id",
-  multerUpload.single("file"),
+  // multerUpload.single("file"),
   EmployeeControlers.updatedEmployees,
 );
 router.delete("/:id", EmployeeControlers.deletedEmployees);

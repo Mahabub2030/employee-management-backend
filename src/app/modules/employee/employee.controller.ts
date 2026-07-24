@@ -28,7 +28,7 @@ const getAllEmployeeData = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getSingaleEmployee = catchAsync(async (req: Request, res: Response) => {
-  const id = req.params.id;
+  const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
   const result = await EmployeeService.getSingaleEmployee(id);
   sendResponse(res, {
     statusCode: 201,
@@ -39,7 +39,7 @@ const getSingaleEmployee = catchAsync(async (req: Request, res: Response) => {
 });
 
 const updatedEmployees = catchAsync(async (req: Request, res: Response) => {
-  const id = req.params.id;
+  const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
   const payload: IEmployee = {
     ...req.body,
     images: req.file?.path,
@@ -54,7 +54,8 @@ const updatedEmployees = catchAsync(async (req: Request, res: Response) => {
   });
 });
 const deletedEmployees = catchAsync(async (req: Request, res: Response) => {
-  const result = await EmployeeService.deletedEmployees(req.params.id);
+  const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
+  const result = await EmployeeService.deletedEmployees(id);
   sendResponse(res, {
     statusCode: 201,
     success: true,

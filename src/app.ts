@@ -64,12 +64,16 @@ export const app = express();
 // ✅ CORS — ONLY ONCE
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: [
+      "http://localhost:3000",
+      "http://localhost:5173",
+      "https://employee-management-frontend-e72vk3i8z-mahabub2030s-projects.vercel.app",
+    ],
     credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   }),
 );
-
 // Middleware
 app.use(
   expressSession({

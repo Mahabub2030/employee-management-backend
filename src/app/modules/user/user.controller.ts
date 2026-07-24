@@ -54,24 +54,24 @@ const updateUser = catchAsync(
 
     const verifiedToken = req.user;
 
-    const payload = req.body;
-    const user = await UserServices.updateUser(
-      userId,
-      payload,
-      verifiedToken as JwtPayload,
-    );
+    // const payload = req.body;
+    // const user = await UserServices.updateUser(
+    //   // userId,
+    //   payload,
+    //   verifiedToken as JwtPayload,
+    // );
 
     // res.status(httpStatus.CREATED).json({
     //     message: "User Created Successfully",
     //     user
     // })
 
-    sendResponse(res, {
-      success: true,
-      statusCode: httpStatus.CREATED,
-      message: "User Updated Successfully",
-      data: user,
-    });
+    // sendResponse(res, {
+    //   success: true,
+    //   statusCode: httpStatus.CREATED,
+    //   message: "User Updated Successfully",
+    //   data: user,
+    // });
   },
 );
 
@@ -117,7 +117,7 @@ const getMe = catchAsync(
 const getSingleUser = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.id;
-    const result = await UserServices.getSingleUser(id);
+    const result = await UserServices.getSingleUser(id as string);
     sendResponse(res, {
       success: true,
       statusCode: httpStatus.CREATED,
