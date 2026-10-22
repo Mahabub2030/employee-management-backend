@@ -5,7 +5,16 @@ import { IEmployee } from "./employee.interface";
 import { EmployeeService } from "./employees.service";
 
 const createEmployee = catchAsync(async (req: Request, res: Response) => {
-  const result = await EmployeeService.createEmployee(req.body);
+  const imageUrls = req.files
+    ? (req.files as Express.Multer.File[]).map((file) => file.path)
+    : [];
+
+  const payload = {
+    ...req.body,
+    ...(imageUrls.length ? { images: imageUrls } : {}),
+  };
+
+  const result = await EmployeeService.createEmployee(payload);
   sendResponse(res, {
     statusCode: 201,
     success: true,
@@ -31,7 +40,7 @@ const getSingaleEmployee = catchAsync(async (req: Request, res: Response) => {
   const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
   const result = await EmployeeService.getSingaleEmployee(id);
   sendResponse(res, {
-    statusCode: 201,
+    statusCode: 200,
     success: true,
     message: "Employees retrieved successfully",
     data: result.data,
@@ -40,14 +49,18 @@ const getSingaleEmployee = catchAsync(async (req: Request, res: Response) => {
 
 const updatedEmployees = catchAsync(async (req: Request, res: Response) => {
   const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
-  const payload: IEmployee = {
+  const uploadedImages = req.files
+    ? (req.files as Express.Multer.File[]).map((file) => file.path)
+    : [];
+
+  const payload: Partial<IEmployee> = {
     ...req.body,
-    images: req.file?.path,
+    ...(uploadedImages.length ? { images: uploadedImages } : {}),
   };
 
   const result = await EmployeeService.updatedEmployees(id, payload);
   sendResponse(res, {
-    statusCode: 201,
+    statusCode: 200,
     success: true,
     message: "Employees Updated successfully",
     data: result,
@@ -57,7 +70,7 @@ const deletedEmployees = catchAsync(async (req: Request, res: Response) => {
   const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
   const result = await EmployeeService.deletedEmployees(id);
   sendResponse(res, {
-    statusCode: 201,
+    statusCode: 200,
     success: true,
     message: "Employees Deleted successfully",
     data: result,

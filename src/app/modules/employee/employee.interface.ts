@@ -8,24 +8,21 @@ export enum EMPLOYEE_STATUS {
 }
 
 export interface IEmployee {
-  // Required fields from your new data structure
+  _id: string;
   name: string;
   jobTitle: string;
-  idNumber: string; // Added: Iqama / ID Number (e.g., "2254394725")
-  employeeId: string | number; // Updated: Changed to string | number to handle values like "67621" safely
-  dacoId?: string; // Added: Optional field for DACO ID (e.g., "DMM-011-0198")
-  group: string; // Added: Division/Group (e.g., "Administrative / Management")
-  joiningDate: Date | string; // Updated: Accepts Date or ISO string
+  idNumber: string;
+  employeeId: string | number;
+  dacoId?: string;
+  group: string;
+  joiningDate: Date | string;
   nationality: string;
-  companyName: string; // Added: Tracking company (e.g., "Nabatat", "Safari")
+  companyName: string;
   status: EMPLOYEE_STATUS;
-  remark?: string; // Added: Optional field for tracking steps like "Transfer Pending" or "Completed"
-
-  // Kept from your original interface (marked as optional if missing from spreadsheet)
-  SAPNumber?: string;
   email?: string;
   phoneNumber?: string;
   gender?: "male" | "female";
-  workLocation?: string; // Made optional since it's inferred by Group/DACO, or can be filled later
+  workLocation?: string;
   images?: string[];
+  remark: string;
 }

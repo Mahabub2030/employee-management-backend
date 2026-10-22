@@ -1,7 +1,15 @@
+import mongoose from "mongoose";
+import AppError from "../../errorHelpers/AppError";
 import { QueryBuilder } from "../../utils/QueryBuilder";
 import { employeeSearchableFields } from "./employee.constant";
 import { IEmployee } from "./employee.interface";
 import { Employee } from "./employee.model";
+
+const validateEmployeeId = (id: string) => {
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    throw new AppError(400, "Invalid employee id");
+  }
+};
 
 const createEmployee = async (payload: IEmployee) => {
   const existingEmployees = await Employee.findOne({
@@ -36,6 +44,8 @@ const getAllEmployeeData = async (query: Record<string, string>) => {
 };
 
 const getSingaleEmployee = async (id: string) => {
+  validateEmployeeId(id);
+
   const employee = await Employee.findById(id);
   return {
     data: employee,
@@ -43,10 +53,12 @@ const getSingaleEmployee = async (id: string) => {
 };
 
 const updatedEmployees = async (id: string, payload: Partial<IEmployee>) => {
+  validateEmployeeId(id);
+
   const existingEmployees = await Employee.findById(id);
 
   if (!existingEmployees) {
-    throw new Error("employee Not found");
+    throw new AppError(404, "employee Not found");
   }
 
   const updatedEmployees = await Employee.findByIdAndUpdate(id, payload, {
@@ -57,7 +69,13 @@ const updatedEmployees = async (id: string, payload: Partial<IEmployee>) => {
   return updatedEmployees;
 };
 const deletedEmployees = async (id: string) => {
-  await Employee.findByIdAndDelete(id);
+  validateEmployeeId(id);
+
+  const deletedEmployee = await Employee.findByIdAndDelete(id);
+  if (!deletedEmployee) {
+    throw new AppError(404, "employee Not found");
+  }
+
   return null;
 };
 

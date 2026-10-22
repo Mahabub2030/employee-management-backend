@@ -6,11 +6,21 @@ const router = Router();
 
 router.post(
   "/create",
-  // validateRequest(createUserZodSchema),
+  multerUpload.array("images", 5),
   EmployeeControlers.createEmployee,
 );
 router.get(
+  "/all-employees",
+  // validateRequest(createUserZodSchema),
+  EmployeeControlers.getAllEmployeeData,
+);
+router.get(
   "/all-Employee",
+  // validateRequest(createUserZodSchema),
+  EmployeeControlers.getAllEmployeeData,
+);
+router.get(
+  "/all-emplyees",
   // validateRequest(createUserZodSchema),
   EmployeeControlers.getAllEmployeeData,
 );
@@ -21,7 +31,7 @@ router.get(
 );
 router.patch(
   "/:id",
-  // multerUpload.single("file"),
+  multerUpload.array("images", 5),
   EmployeeControlers.updatedEmployees,
 );
 router.delete("/:id", EmployeeControlers.deletedEmployees);
