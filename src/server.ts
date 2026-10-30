@@ -97,13 +97,24 @@ import { seedSuperAdmin } from "./app/utils/seedSuperAdmin";
 
 let server: Server;
 
-const startServer = async () => {
+const initializeRuntime = async () => {
   try {
-    await mongoose.connect(envVars.DB_URL);
+    if (mongoose.connection.readyState === 0) {
+      await mongoose.connect(envVars.DB_URL);
+    }
+
     await connectRedis();
     console.log("Connected to DB & Redis!!");
 
     await seedSuperAdmin();
+  } catch (error) {
+    console.error("Startup error:", error);
+  }
+};
+
+const startServer = async () => {
+  try {
+    await initializeRuntime();
 
     server = app.listen(envVars.PORT || 5000, () => {
       console.log(`Server is listening to port ${envVars.PORT || 5000}`);
@@ -113,7 +124,9 @@ const startServer = async () => {
   }
 };
 
-if (process.env.VERCEL !== "1") {
+if (process.env.VERCEL === "1") {
+  initializeRuntime();
+} else {
   startServer();
 }
 
