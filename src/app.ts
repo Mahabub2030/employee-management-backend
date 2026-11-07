@@ -31,7 +31,7 @@ app.use(
     saveUninitialized: false,
   }),
 );
-
+// this here tells passport to use session cookies for authentication
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.json());
