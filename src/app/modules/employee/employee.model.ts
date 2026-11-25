@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 
+=======
+>>>>>>> e6d1b6506a6ed0b991e6462a52ab71bddaa3896c
 // export const Employee = model<IEmployee>("Employee", employeeSchema);
 import { model, Schema } from "mongoose";
 import { EMPLOYEE_STATUS, IEmployee } from "./employee.interface";
@@ -60,10 +63,7 @@ const employeeSchema = new Schema<IEmployee>(
     },
 
     // Original properties kept optional (removed constraints to avoid insert failures)
-    SAPNumber: {
-      type: String,
-      sparse: true, // Sparse allows multiple null/missing records without unique collisions
-    },
+
     phoneNumber: {
       type: String,
       default: "",
@@ -86,7 +86,7 @@ const employeeSchema = new Schema<IEmployee>(
     },
   },
   {
-    timestamps: true,
+    timestamps: false,
     versionKey: false,
   },
 );

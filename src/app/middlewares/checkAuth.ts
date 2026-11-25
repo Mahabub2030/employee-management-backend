@@ -11,14 +11,44 @@ export const checkAuth =
   (...authRoles: string[]) =>
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const accessToken = req.headers.authorization || req.cookies.accessToken;
+      const authHeader = req.headers.authorization;
+      const cookieToken = req.cookies?.accessToken;
 
-      if (!accessToken) {
-        throw new AppError(403, "No Token Recieved");
+      let rawToken = authHeader || cookieToken;
+
+      // Debugging logs - inspect these in your terminal
+      // console.log("RECEIVED AUTHORIZATION HEADER:", authHeader);
+      // console.log("RECEIVED COOKIE TOKEN:", cookieToken);
+
+      if (!rawToken) {
+        throw new AppError(403, "No Token Received");
       }
 
+      // 1. Strip 'Bearer ' if present
+      if (rawToken.startsWith("Bearer ")) {
+        rawToken = rawToken.split(" ")[1];
+      }
+
+      // 2. Clean whitespace, quotes, or accidental stringification
+      let cleanToken = rawToken.trim();
+      if (cleanToken.startsWith('"') && cleanToken.endsWith('"')) {
+        cleanToken = cleanToken.slice(1, -1);
+      }
+
+      // 3. Reject invalid or non-JWT string representations
+      if (
+        !cleanToken ||
+        cleanToken === "undefined" ||
+        cleanToken === "null" ||
+        cleanToken === "[object Object]"
+      ) {
+        throw new AppError(403, "Invalid Token Received");
+      }
+
+      // console.log("SANITIZED TOKEN TO VERIFY:", cleanToken);
+
       const verifiedToken = verifyToken(
-        accessToken,
+        cleanToken,
         envVars.JWT_ACCESS_SECRET,
       ) as JwtPayload;
 
@@ -49,7 +79,7 @@ export const checkAuth =
       req.user = verifiedToken;
       next();
     } catch (error) {
-      console.log("jwt error", error);
+      // console.log("jwt error", error);
       next(error);
     }
   };
