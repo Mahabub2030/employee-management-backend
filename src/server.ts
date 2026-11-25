@@ -8,7 +8,8 @@ import { connectRedis } from "./app/config/redis.config";
 import { seedSuperAdmin } from "./app/utils/seedSuperAdmin";
 
 let server: Server;
-
+const first = "Hello, World!";
+console.log(first);
 const startServer = async () => {
   try {
     await mongoose.connect(envVars.DB_URL);
